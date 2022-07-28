@@ -5,13 +5,12 @@ module.exports = {
     node: true
   },
   extends: [
-    'standard'
+    'eslint:recommended'
   ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  rules: {
-    semi: [1, 'always']
+  rules:{
   }
 };
