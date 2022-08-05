@@ -11,6 +11,15 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  rules:{
+  "rules": {
+      "no-unused-vars": [
+          "warn"
+      ],
+      "no-var": [
+          "off"
+      ],
+      "one-var": [
+          "off"
+      ]
   }
 };
