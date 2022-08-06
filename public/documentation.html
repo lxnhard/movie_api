@@ -30,7 +30,7 @@
       <tr>
         <td>Return a list of ALL movies to the user</td>
         <td>/movies</td>
-        <td><button>GET</button></td>
+        <td><span class="method">GET</span></td>
         <td>None</td>
         <td>A JSON object holding data about all movies
           <pre><code class="example">{
@@ -55,7 +55,7 @@
       <tr>
         <td>Return data about a single movie by title to the user</td>
         <td>/movies/[title]</td>
-        <td><button>GET</button></td>
+        <td><span class="method">GET</span></td>
         <td>None</td>
         <td>A JSON object holding data about a specific movie containing description, genre, director, image URL, whether it’s featured or not
           <pre><code class="example">{
@@ -76,7 +76,7 @@
       <tr>
         <td>Return data about a genre (description) by name/title</td>
         <td>movies/genres/[title]</td>
-        <td><button>GET</button></td>
+        <td><span class="method">GET</span></td>
         <td>None</td>
         <td>A JSON object holding data about a specific genre
           <pre><code class="example">{
@@ -90,7 +90,7 @@
       <tr>
         <td>Return data about a director (bio, birth year, death year) by name</td>
         <td>movies/directors/[name]</td>
-        <td><button>GET</button></td>
+        <td><span class="method">GET</span></td>
         <td>None</td>
         <td>A JSON object holding data about a specific director (bio, birth year, death year)
           <pre><code class="example">{
@@ -106,7 +106,7 @@
       <tr>
         <td>Allow new users to register</td>
         <td>/users</td>
-        <td><button>POST</button></td>
+        <td><span class="method">POST</span></td>
         <td>A JSON object holding data about the user (username, password, id)
           <pre><code class="example">{
     'name': 'username',
@@ -125,28 +125,28 @@
       <tr>
         <td>Allow users to update their user info (username)</td>
         <td>/users/[username]/[new_username]</td>
-        <td><button>PUT</button></td>
+        <td><span class="method">PUT</span></td>
         <td>None</td>
         <td>A text message indicating that the username was updated</td>
       </tr>
       <tr>
         <td>Allow users to add a movie to their list of favorites</td>
         <td>/users/[username]/favorites/[title]</td>
-        <td><button>POST</button></td>
+        <td><span class="method">POST</span></td>
         <td>None</td>
         <td>A text message either indicating that the movie has been added or that it was not available in database</td>
       </tr>
       <tr>
         <td>Allow users to remove a movie from their list of favorites</td>
         <td>/users/[username]/favorites/[title]</td>
-        <td><button>DELETE</button></td>
+        <td><span class="method">DELETE</span></td>
         <td>None</td>
         <td>A text message either indicating that the movie has been deleted from favorites or that it was not available</td>
       </tr>
       <tr>
         <td>Allow existing users to deregister</td>
         <td>/users/[username]</td>
-        <td><button>DELETE</button></td>
+        <td><span class="method">DELETE</span></td>
         <td>None</td>
         <td>A text message indicating that the user has been deleted</td>
       </tr>
