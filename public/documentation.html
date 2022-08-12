@@ -35,20 +35,19 @@
         <td>A JSON object holding data about all movies
           <pre><code class="example">{
   {
-  'title': 'Cannibal Holocaust',
-  'director': {
-    'name': 'Gianfranco Clerici',
-    'biography': 'birth, life, death',
-    'birth year': '1941',
-    'death year': ''
+  'Title': 'Cannibal Holocaust',
+  'Director': {
+    'Name': 'Gianfranco Clerici',
+    'Bio': 'birth, life, death',
+    'Birth': '1941'
   },
-  'genre': {
-    'title': 'Horror',
-    'description': 'Horror is a film genre...'
+  'Genre': {
+    'Name': 'Horror',
+    'Description': 'Horror is a film genre...'
   }
 },
 {
-  'title': ...
+  'Title': ...
 }</code></pre>
         </td>
       </tr>
@@ -59,16 +58,15 @@
         <td>None</td>
         <td>A JSON object holding data about a specific movie containing description, genre, director, image URL, whether it’s featured or not
           <pre><code class="example">{
-  'title': 'Cannibal Holocaust',
-  'director': {
-    'name': 'Gianfranco Clerici',
-    'biography': 'birth, life, death',
-    'birth year': '1941',
-    'death year': ''
+  'Title': 'Cannibal Holocaust',
+  'Director': {
+    'Name': 'Gianfranco Clerici',
+    'Bio': 'birth, life, death',
+    'Birth': '1941'
   },
-  'genre': {
-    'title': 'Horror',
-    'description': 'Horror is a film genre...'
+  'Genre': {
+    'Name': 'Horror',
+    'Description': 'Horror is a film genre...'
   }
 }</code></pre>
         </td>
@@ -80,9 +78,9 @@
         <td>None</td>
         <td>A JSON object holding data about a specific genre
           <pre><code class="example">{
-  'genre': {
-    'title': 'Horror',
-    'description': 'Horror is a film genre...'
+  'Genre': {
+    'Name': 'Horror',
+    'Description': 'Horror is a film genre...'
   }
 }</code></pre>
         </td>
@@ -94,11 +92,10 @@
         <td>None</td>
         <td>A JSON object holding data about a specific director (bio, birth year, death year)
           <pre><code class="example">{
-  'director': {
-    'name': 'Gianfranco Clerici',
-    'biography': 'birth, life, death',
-    'birth year': '1941',
-    'death year': ''
+  'Director': {
+    'Name': 'Gianfranco Clerici',
+    'Bio': 'birth, life, death',
+    'Birth': '1941'
   }
 }</code></pre>
         </td>
@@ -109,17 +106,19 @@
         <td><span class="method">POST</span></td>
         <td>A JSON object holding data about the user (username, password, id)
           <pre><code class="example">{
-    'name': 'username',
-    'password': 'abc123',
-    'id': 'ca9bef3b-ce03-45ae-83ef-1472530ad703'
+    'Username': 'username',
+    'Password': 'abc123',
+    'Email': 'user@domain.com',
+    'Birthday': '1925-07-02'
   }</code></pre>
         </td>
         <td>A JSON object holding data about the user that was added, including an ID.
           <pre><code class="example">{
-    'name': 'username',
-    'password': 'abc123',
-    'id': 'ca9bef3b-ce03-45ae-83ef-1472530ad703'
-}</code></pre>
+    'Username': 'username',
+    'Password': 'abc123',
+    'Email': 'user@domain.com',
+    'Birthday': '1925-07-02'
+  }</code></pre>
         </td>
       </tr>
       <tr>
