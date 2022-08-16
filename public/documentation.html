@@ -32,23 +32,32 @@
         <td>/movies</td>
         <td><span class="method">GET</span></td>
         <td>None</td>
-        <td>A JSON object holding data about all movies
-          <pre><code class="example">{
-  {
-  'Title': 'Cannibal Holocaust',
-  'Director': {
-    'Name': 'Gianfranco Clerici',
-    'Bio': 'birth, life, death',
-    'Birth': '1941'
-  },
-  'Genre': {
-    'Name': 'Horror',
-    'Description': 'Horror is a film genre...'
-  }
-},
-{
-  'Title': ...
-}</code></pre>
+        <td>A JSON object holding data about all movies:
+          <pre><code class="example">[
+    {
+        "Genre": {
+            "Name": "Science fiction",
+            "Description": "Science fiction ..."
+        },
+        "Director": {
+            "Name": "Andrei Tarkovsky",
+            "Bio": "Andrei Arsenyevich Tarkovsky was s...",
+            "Birth": 1932,
+            "Death": 1979
+        },
+        "Actors": [],
+        "_id": "62f5060877845a8eaaba56af",
+        "Title": "Solaris",
+        "Description": "A psychologist is sent to a space ...",
+        "ImagePath": "solaris.png",
+        "Featured": true,
+        "ReleaseYear": 1972
+    },
+    {
+      ...
+    }
+]
+</code></pre>
         </td>
       </tr>
       <tr>
@@ -56,24 +65,31 @@
         <td>/movies/[title]</td>
         <td><span class="method">GET</span></td>
         <td>None</td>
-        <td>A JSON object holding data about a specific movie containing description, genre, director, image URL, whether it’s featured or not
-          <pre><code class="example">{
-  'Title': 'Cannibal Holocaust',
-  'Director': {
-    'Name': 'Gianfranco Clerici',
-    'Bio': 'birth, life, death',
-    'Birth': '1941'
-  },
-  'Genre': {
-    'Name': 'Horror',
-    'Description': 'Horror is a film genre...'
-  }
+        <td>A JSON object holding data about a specific movie:
+        <pre><code class="example">{
+    "Genre": {
+        "Name": "Science fiction",
+        "Description": "Science fiction ..."
+    },
+    "Director": {
+        "Name": "Andrei Tarkovsky",
+        "Bio": "Andrei Arsenyevich Tarkovsky was s...",
+        "Birth": 1932,
+        "Death": 1979
+    },
+    "Actors": [],
+    "_id": "62f5060877845a8eaaba56af",
+    "Title": "Solaris",
+    "Description": "A psychologist is sent to a space ...",
+    "ImagePath": "solaris.png",
+    "Featured": true,
+    "ReleaseYear": 1972
 }</code></pre>
         </td>
       </tr>
       <tr>
         <td>Return data about a genre (description) by name/title</td>
-        <td>movies/genres/[title]</td>
+        <td>movies/genres/[name]</td>
         <td><span class="method">GET</span></td>
         <td>None</td>
         <td>A JSON object holding data about a specific genre
@@ -92,11 +108,10 @@
         <td>None</td>
         <td>A JSON object holding data about a specific director (bio, birth year, death year)
           <pre><code class="example">{
-  'Director': {
-    'Name': 'Gianfranco Clerici',
-    'Bio': 'birth, life, death',
-    'Birth': '1941'
-  }
+  "Name": "Andrei Tarkovsky",
+  "Bio": "Andrei Arsenyevich Tarkovsky was ...",
+  "Birth": 1932,
+  "Death": 1979
 }</code></pre>
         </td>
       </tr>
@@ -104,33 +119,53 @@
         <td>Allow new users to register</td>
         <td>/users</td>
         <td><span class="method">POST</span></td>
-        <td>A JSON object holding data about the user (username, password, id)
+        <td>A JSON object holding data about the user:
           <pre><code class="example">{
-    'Username': 'username',
-    'Password': 'abc123',
-    'Email': 'user@domain.com',
-    'Birthday': '1925-07-02'
+    Username: String [required],
+    Password: String [required],
+    Email: String [required],
+    Birthday: Date
   }</code></pre>
         </td>
         <td>A JSON object holding data about the user that was added, including an ID.
           <pre><code class="example">{
-    'Username': 'username',
-    'Password': 'abc123',
-    'Email': 'user@domain.com',
-    'Birthday': '1925-07-02'
-  }</code></pre>
+    "Username": "new_user",
+    "Password": "xyz",
+    "Email": "email@abc.de",
+    "Birthday": "1984-02-02T00:00:00.000Z",
+    "FavoriteMovies": [],
+    "_id": "62fbd9b7f5d83221d57c2fb3",
+    "__v": 0
+}</code></pre>
         </td>
       </tr>
       <tr>
         <td>Allow users to update their user info (username)</td>
-        <td>/users/[username]/[new_username]</td>
+        <td>/users/[Username]</td>
         <td><span class="method">PUT</span></td>
-        <td>None</td>
-        <td>A text message indicating that the username was updated</td>
-      </tr>
+        <td>A JSON object holding whatever new data about the user needs to be replaced:
+          <pre><code class="example">{
+    Username: String,
+    Password: String,
+    Email: String,
+    Birthday: Date
+  }</code></pre>
+</td>
+<td>A JSON object holding all data about the user that was updated.
+  <pre><code class="example">{
+"Username": "new_alias",
+"Password": "abc123",
+"Email": "hello@world.gov",
+"Birthday": "1984-02-02T00:00:00.000Z",
+"FavoriteMovies": [],
+"_id": "62fbd9b7f5d83221d57c2fb3",
+"__v": 0
+}</code></pre>
+</td>
+</tr>
       <tr>
         <td>Allow users to add a movie to their list of favorites</td>
-        <td>/users/[username]/favorites/[title]</td>
+        <td>/users/[Username]/movies/[MovieID]</td>
         <td><span class="method">POST</span></td>
         <td>None</td>
         <td>A text message either indicating that the movie has been added or that it was not available in database</td>
