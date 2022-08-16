@@ -7,55 +7,6 @@ const express = require('express'),
 
 const app = express();
 
-let movies = [
-  {
-    'title': 'Cannibal Holocaust',
-    'director': {
-      'name': 'Gianfranco Clerici',
-      'biography': 'birth, life, death',
-      'birth year': '1941',
-      'death year': ''
-    },
-    'genre': {
-      'title': 'Horror',
-      'description': 'Horror is a film genre that seeks to elicit fear or disgust in its audience for entertainment purposes.'
-    }
-  },
-  {
-    'title': 'Christmas in Connecticut',
-    'director': {
-      'name': 'Peter Godfrey',
-      'biography': 'birth, life, death',
-      'birth year': '1899',
-      'death year': '1970'
-    },
-    'genre': {
-      'title': 'Romantic comedy',
-      'description': 'Romantic comedy (also known as romcom or rom-com) is a subgenre of comedy and slice-of-life fiction, focusing on lighthearted, humorous plot lines centered on romantic ideas, such as how true love is able to surmount most obstacles.'
-    }
-  }
-];
-
-let users = [
-  {
-    'name': 'lxnhard',
-    'password': 'abc123',
-    'favorites': [{
-      'title': 'Christmas in Connecticut',
-      'director': {
-        'name': 'Peter Godfrey',
-        'biography': 'birth, life, death',
-        'birth year': '1899',
-        'death year': '1970'
-      },
-      'genre': {
-        'title': 'Romantic comedy',
-        'description': 'Romantic comedy (also known as romcom or rom-com) is a subgenre of comedy and slice-of-life fiction, focusing on lighthearted, humorous plot lines centered on romantic ideas, such as how true love is able to surmount most obstacles.'
-      }
-    }],
-    'id': 'ca9bef3b-ce03-45ae-83ef-1472530ad703'
-  }
-];
 const Movies = Models.Movie;
 const Users = Models.User;
 mongoose.connect('mongodb://localhost:27017/movieDB', {useNewUrlParser: true, useUnifiedTopology: true});
