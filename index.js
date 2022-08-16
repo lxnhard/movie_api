@@ -1,7 +1,9 @@
 const express = require('express'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
-  uuid = require('uuid');
+  uuid = require('uuid'),
+  mongoose = require('mongoose'),
+  Models = require('./models.js');
 
 const app = express();
 
@@ -54,6 +56,9 @@ let users = [
     'id': 'ca9bef3b-ce03-45ae-83ef-1472530ad703'
   }
 ];
+const Movies = Models.Movie;
+const Users = Models.User;
+mongoose.connect('mongodb://localhost:27017/movieDB', {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.use(bodyParser.json());
 app.use(morgan('common'));
