@@ -11,7 +11,13 @@ const Movies = Models.Movie;
 const Users = Models.User;
 mongoose.connect('mongodb://localhost:27017/movieDB', {useNewUrlParser: true, useUnifiedTopology: true});
 
+// MIDDLEWARE
 app.use(bodyParser.json());
+// authentication
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
+//Logs
 app.use(morgan('common'));
 app.use(express.static('public'));
 
