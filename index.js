@@ -117,58 +117,77 @@ app.post('/users', (req, res) => {
 }*/
 
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate( { Username: req.params.Username }, {
-    $set:
-    {
-      Username: req.body.Username,
-      Password: req.body.Password,
-      Email: req.body.Email,
-      Birthday: req.body.Birthday
-    }
-  },
-  {new: true}) // updated document is returned
-  .then((updatedUser) => {
-    res.status(200).json(updatedUser);
-  })
-  .catch((err) => {
-    console.error(err);
-    res.status(500).send('Error: '+err);
-  });
+  // only allow if request is referring to active user
+  if (req.user.Username != req.params.Username) {
+    res.status(403).json("Not authorized.");
+  } else {
+    Users.findOneAndUpdate( { Username: req.params.Username }, {
+      $set:
+      {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      }
+    },
+    {new: true}) // updated document is returned
+    .then((updatedUser) => {
+      res.status(200).json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: '+err);
+    });
+  }
 });
 
 
 //Allow users to add a movie to their list of favorites
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
-     $push: { FavoriteMovies: req.params.MovieID }
-   },
-   { new: true }) // updated document is returned
-   .then((updatedUser) => {
-     res.status(201).send("Favorite movie successfully added to "+updatedUser.Username);
-   })
-   .catch((err) => {
-     console.error(err);
-     res.status(500).send('Error: '+err);
-   });
- });
+  // only allow if request is referring to active user
+  if (req.user.Username != req.params.Username) {
+    res.status(403).json("Not authorized.");
+  } else {
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+      $push: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true }) // updated document is returned
+    .then((updatedUser) => {
+      res.status(201).send("Favorite movie successfully added to "+updatedUser.Username);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: '+err);
+    });
+  }
+});
 
 //Allow users to remove a movie from their list of favorites
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
-     pull: { FavoriteMovies: req.params.MovieID }
-   },
-   { new: true }) // updated document is returned
-   .then((updatedUser) => {
-     res.status(200).send("Favorite movie successfully removed from "+updatedUser.Username);
-   })
-   .catch((err) => {
-     console.error(err);
-     res.status(500).send('Error: '+err);
-   });
- });
+  // only allow if request is referring to active user
+  if (req.user.Username != req.params.Username) {
+    res.status(403).json("Not authorized.");
+  } else {
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+      pull: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true }) // updated document is returned
+    .then((updatedUser) => {
+      res.status(200).send("Favorite movie successfully removed from "+updatedUser.Username);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: '+err);
+    });
+  }
+});
 
 // Allow existing users to deregister
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  // only allow if request is referring to active user
+  if (req.user.Username != req.params.Username) {
+    res.status(403).json("Not authorized.");
+  } else {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
@@ -181,6 +200,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
       console.error(err);
       res.status(500).send('Error: ' + err);
     });
+  }
 });
 
 
