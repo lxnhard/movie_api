@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost:27017/movieDB', {useNewUrlParser: true, us
 // MIDDLEWARE
 app.use(bodyParser.json());
 // authentication
-let auth = require('./auth')(app);
+require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 //Logs
