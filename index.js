@@ -13,6 +13,19 @@ mongoose.connect('mongodb://localhost:27017/movieDB', {useNewUrlParser: true, us
 
 // MIDDLEWARE
 app.use(bodyParser.json());
+// CORS
+const cors = require('cors');
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // i don't understand this line
+    if (allowedOrigins.indexOf(origin) === -1){ // specific origin not in allowedOrigins list
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+}));
 // authentication
 require('./auth')(app);
 const passport = require('passport');
