@@ -45,6 +45,11 @@ require('./passport');
 app.use(morgan('common'));
 app.use(express.static('public'));
 
+// CRUD / ROUTES
+app.get('/',(req,res) => {
+  res.send('Welcome to the unbelievably incredible Watch-Til-Death API');
+})
+
 // Return a list of ALL movies to the user
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
