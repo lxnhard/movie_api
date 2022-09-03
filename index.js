@@ -3,7 +3,9 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   uuid = require('uuid'),
   mongoose = require('mongoose'),
-  Models = require('./models.js');
+  Models = require('./models.js'),
+  { check, validationResult } = require('express-validator');
+
 
 const app = express();
 
@@ -87,6 +89,15 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false
     });
 });
 
+// Input Validation methods for user data
+const userValidation = [
+  check('Username', 'Username must be at least 5 characters.').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password must be at least 5 characters.').isLength({min: 8}),
+  check('Email', 'Email is not valid').isEmail(),
+  check('Birthday', 'Birthday is not valid').isDate()
+];
+
 // Allow new users to register
 // Request expects JSON:
 // {
@@ -96,7 +107,13 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false
 //   Email: String,
 //   Birthday: Date
 // }
-app.post('/users', (req, res) => {
+app.post('/users', userValidation, (req, res) => {
+  //check for validation errors
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
   let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({ Username: req.body.Username })
   .then((user) => {
@@ -135,7 +152,12 @@ app.post('/users', (req, res) => {
   Birthday: Date
 }*/
 
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), userValidation, (req, res) => {
+    //check for validation errors
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
   // only allow if request is referring to active user
   if (req.user.Username != req.params.Username) {
     res.status(403).json("Not authorized.");
