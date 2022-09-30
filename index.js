@@ -193,7 +193,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), us
 
 
 // Get user data
-app.get('/users/:Username', passport.authenticate('jwt', { session: false }), userValidation, (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   // only allow if request is referring to active user
   if (req.user.Username != req.params.Username) {
     res.status(403).json("Not authorized.");
