@@ -194,15 +194,19 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), us
 
 // Get user data
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), userValidation, (req, res) => {
-  Users.findOne({ Username: req.params.Username })
-    .then((user) => {
-      res.status(400).json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-
+  // only allow if request is referring to active user
+  if (req.user.Username != req.params.Username) {
+    res.status(403).json("Not authorized.");
+  } else {
+    Users.findOne({ Username: req.params.Username })
+      .then((user) => {
+        res.status(400).json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
 });
 
 
