@@ -172,23 +172,38 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), us
   if (req.user.Username != req.params.Username) {
     res.status(403).json("Not authorized.");
   } else {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-      $set:
-      {
-        Username: req.body.Username,
-        Password: hashedPassword,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday
-      }
-    },
-      { new: true }) // updated document is returned
-      .then((updatedUser) => {
-        res.status(200).json(updatedUser);
+    // check if requested new username is already taken 
+    Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
+          return res.status(400).send('Username ' + req.body.Username + ' already taken.');
+        } else {
+          // update user data
+          Users.findOneAndUpdate({ Username: req.params.Username }, {
+            $set:
+            {
+              Username: req.body.Username,
+              Password: hashedPassword,
+              Email: req.body.Email,
+              Birthday: req.body.Birthday
+            }
+          },
+            { new: true }) // updated document is returned
+            .then((updatedUser) => {
+              res.status(200).json(updatedUser);
+            })
+            .catch((err) => {
+              console.error(err);
+              res.status(500).send('Error: ' + err);
+            });
+        }
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
       });
+
+
   }
 });
 
