@@ -252,17 +252,21 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
   if (req.user.Username != req.params.Username) {
     res.status(403).json("Not authorized.");
   } else {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-      $pull: { FavoriteMovies: req.params.MovieID }
-    },
-      { new: true }) // updated document is returned
-      .then((updatedUser) => {
-        res.status(200).send("Favorite movie successfully removed from " + updatedUser);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
+    Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      {
+        $pull: { FavoriteMovies: req.params.MovieID }
+      },
+      { new: true }, // updated document is returned
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+        } else {
+          res.json(updatedUser);
+        }
+      }
+    );
   }
 });
 
