@@ -256,8 +256,8 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
       $pull: { FavoriteMovies: req.params.MovieID }
     },
       { new: true }) // updated document is returned
-      .then((updatedUser) => {
-        res.status(200).send("Favorite movie successfully removed from " + updatedUser.Username);
+      .then((updatedUser, req) => {
+        res.status(200).send("Favorite movie successfully removed from " + updatedUser + "param: " + req.params.MovieID);
       })
       .catch((err) => {
         console.error(err);
