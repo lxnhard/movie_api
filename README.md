@@ -30,8 +30,8 @@ single movie by title to the user
 
 ### Links
 
-- Documentation: [https://watch-til-death.herokuapp.com/documentation.html]
-- Live URL: [https://watch-til-death.herokuapp.com/]
+- Documentation: [https://watch-til-death.cyclic.app/documentation.html]
+- Live URL: [https://watch-til-death.cyclic.app/]
 
 ## My process
 
