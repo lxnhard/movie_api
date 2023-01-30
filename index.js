@@ -172,10 +172,11 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), us
   if (req.user.Username != req.params.Username) {
     res.status(403).json("Not authorized.");
   } else {
-    // check if requested new username is already taken 
+    // check if requested new username is already taken
     Users.findOne({ Username: req.body.Username })
       .then((user) => {
-        if (user) {
+        // + condition: username is not same as before
+        if ((user) && (req.body.Username !== req.params.Username)) {
           return res.status(400).send('Username ' + req.body.Username + ' already taken.');
         } else {
           // update user data

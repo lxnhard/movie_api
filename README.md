@@ -41,7 +41,3 @@ single movie by title to the user
 - Express
 - MongoDB
 - Mongoose
-
-### What I learned
-
-...
