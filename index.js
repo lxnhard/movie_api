@@ -228,7 +228,7 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 
 
 //Allow users to add a movie to their list of favorites
-app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   // only allow if request is referring to active user
   if (req.user.Username != req.params.Username) {
     res.status(403).json("Not authorized.");
