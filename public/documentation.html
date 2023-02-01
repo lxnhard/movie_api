@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Leonhard Link">
-  <meta name="description" content="WatchTilDeath is a web application which provides users with access to information about different movies, directors, and genres.">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <meta name="description"
+    content="WatchTilDeath is a web application which provides users with access to information about different movies, directors, and genres.">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
   <link rel="stylesheet" type="text/css" href="styles.css">
   <title>Documentation | WatchTilDeath</title>
 </head>
+
 <body>
   <section class="description">
     <h1>Documentation</h1>
     <p>
-      This API provides the server-side component for WatchTilDeath, a web application which provides users with access to information about different movies, directors, and genres.
+      This API provides the server-side component for WatchTilDeath, a web application which provides users with access
+      to information about different movies, directors, and genres.
       Users are able to sign up, update their personal information, and create a list of their favorite movies.
     </p>
   </section>
 
 
   <table>
-      <tr>
-        <th scope="col">Business Logic</th>
-        <th scope="col">URL</th>
-        <th scope="col">HTTP&nbsp;Method</th>
-        <th scope="col">Request body data format</th>
-        <th scope="col">Response body data format</th>
-      </tr>
-      <tr>
-        <td>Return a list of ALL movies to the user</td>
-        <td>/movies</td>
-        <td><span class="method">GET</span></td>
-        <td>None</td>
-        <td>A JSON object holding data about all movies:
-          <pre><code class="example">[
+    <tr>
+      <th scope="col">Business Logic</th>
+      <th scope="col">URL</th>
+      <th scope="col">HTTP&nbsp;Method</th>
+      <th scope="col">Request body data format</th>
+      <th scope="col">Response body data format</th>
+    </tr>
+    <tr>
+      <td>Return a list of ALL movies to the user</td>
+      <td>/movies</td>
+      <td><span class="method">GET</span></td>
+      <td>None</td>
+      <td>A JSON object holding data about all movies:
+        <pre><code class="example">[
     {
         "Genre": {
             "Name": "Science fiction",
@@ -58,14 +63,14 @@
     }
 ]
 </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Return data about a single movie by title to the user</td>
-        <td>/movies/[title]</td>
-        <td><span class="method">GET</span></td>
-        <td>None</td>
-        <td>A JSON object holding data about a specific movie:
+      </td>
+    </tr>
+    <tr>
+      <td>Return data about a single movie by title to the user</td>
+      <td>/movies/[title]</td>
+      <td><span class="method">GET</span></td>
+      <td>None</td>
+      <td>A JSON object holding data about a specific movie:
         <pre><code class="example">{
     "Genre": {
         "Name": "Science fiction",
@@ -85,50 +90,50 @@
     "Featured": true,
     "ReleaseYear": 1972
 }</code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Return data about a genre (description) by name/title</td>
-        <td>movies/genres/[name]</td>
-        <td><span class="method">GET</span></td>
-        <td>None</td>
-        <td>A JSON object holding data about a specific genre
-          <pre><code class="example">{
+      </td>
+    </tr>
+    <tr>
+      <td>Return data about a genre (description) by name/title</td>
+      <td>movies/genres/[name]</td>
+      <td><span class="method">GET</span></td>
+      <td>None</td>
+      <td>A JSON object holding data about a specific genre
+        <pre><code class="example">{
   'Genre': {
     'Name': 'Horror',
     'Description': 'Horror is a film genre...'
   }
 }</code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Return data about a director (bio, birth year, death year) by name</td>
-        <td>movies/directors/[name]</td>
-        <td><span class="method">GET</span></td>
-        <td>None</td>
-        <td>A JSON object holding data about a specific director (bio, birth year, death year)
-          <pre><code class="example">{
+      </td>
+    </tr>
+    <tr>
+      <td>Return data about a director (bio, birth year, death year) by name</td>
+      <td>movies/directors/[name]</td>
+      <td><span class="method">GET</span></td>
+      <td>None</td>
+      <td>A JSON object holding data about a specific director (bio, birth year, death year)
+        <pre><code class="example">{
   "Name": "Andrei Tarkovsky",
   "Bio": "Andrei Arsenyevich Tarkovsky was ...",
   "Birth": 1932,
   "Death": 1979
 }</code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Allow new users to register</td>
-        <td>/users</td>
-        <td><span class="method">POST</span></td>
-        <td>A JSON object holding data about the user:
-          <pre><code class="example">{
+      </td>
+    </tr>
+    <tr>
+      <td>Allow new users to register</td>
+      <td>/users</td>
+      <td><span class="method">POST</span></td>
+      <td>A JSON object holding data about the user:
+        <pre><code class="example">{
     Username: String [required],
     Password: String [required],
     Email: String [required],
     Birthday: Date
   }</code></pre>
-        </td>
-        <td>A JSON object holding data about the user that was added, including an ID.
-          <pre><code class="example">{
+      </td>
+      <td>A JSON object holding data about the user that was added, including an ID.
+        <pre><code class="example">{
     "Username": "new_user",
     "Password": "xyz",
     "Email": "email@abc.de",
@@ -137,22 +142,22 @@
     "_id": "62fbd9b7f5d83221d57c2fb3",
     "__v": 0
 }</code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Allow users to update their user info (username)</td>
-        <td>/users/[Username]</td>
-        <td><span class="method">PUT</span></td>
-        <td>A JSON object holding whatever new data about the user needs to be replaced:
-          <pre><code class="example">{
+      </td>
+    </tr>
+    <tr>
+      <td>Allow users to update their user info (username)</td>
+      <td>/users/[Username]</td>
+      <td><span class="method">PUT</span></td>
+      <td>A JSON object holding whatever new data about the user needs to be replaced:
+        <pre><code class="example">{
     Username: String,
     Password: String,
     Email: String,
     Birthday: Date
   }</code></pre>
-</td>
-<td>A JSON object holding all data about the user that was updated.
-  <pre><code class="example">{
+      </td>
+      <td>A JSON object holding all data about the user that was updated.
+        <pre><code class="example">{
 "Username": "new_alias",
 "Password": "abc123",
 "Email": "hello@world.gov",
@@ -161,30 +166,32 @@
 "_id": "62fbd9b7f5d83221d57c2fb3",
 "__v": 0
 }</code></pre>
-</td>
-</tr>
-      <tr>
-        <td>Allow users to add a movie to their list of favorites</td>
-        <td>/users/[Username]/movies/[MovieID]</td>
-        <td><span class="method">POST</span></td>
-        <td>None</td>
-        <td>A text message either indicating that the movie has been added or that it was not available in database</td>
-      </tr>
-      <tr>
-        <td>Allow users to remove a movie from their list of favorites</td>
-        <td>/users/[username]/favorites/[title]</td>
-        <td><span class="method">DELETE</span></td>
-        <td>None</td>
-        <td>A text message either indicating that the movie has been deleted from favorites or that it was not available</td>
-      </tr>
-      <tr>
-        <td>Allow existing users to deregister</td>
-        <td>/users/[username]</td>
-        <td><span class="method">DELETE</span></td>
-        <td>None</td>
-        <td>A text message indicating that the user has been deleted</td>
-      </tr>
+      </td>
+    </tr>
+    <tr>
+      <td>Allow users to add a movie to their list of favorites</td>
+      <td>/users/[Username]/movies/[MovieID]</td>
+      <td><span class="method">POST</span></td>
+      <td>None</td>
+      <td>A text message either indicating that the movie has been added or that it was not available in database</td>
+    </tr>
+    <tr>
+      <td>Allow users to remove a movie from their list of favorites</td>
+      <td>/users/[username]/movies/[title]</td>
+      <td><span class="method">DELETE</span></td>
+      <td>None</td>
+      <td>A text message either indicating that the movie has been deleted from favorites or that it was not available
+      </td>
+    </tr>
+    <tr>
+      <td>Allow existing users to deregister</td>
+      <td>/users/[username]</td>
+      <td><span class="method">DELETE</span></td>
+      <td>None</td>
+      <td>A text message indicating that the user has been deleted</td>
+    </tr>
   </table>
 
 </body>
+
 </html>
