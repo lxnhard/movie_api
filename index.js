@@ -22,20 +22,20 @@ app.use(bodyParser.json());
 // CORS
 const cors = require('cors');
 // all origins allowed:
-app.use(cors());
+// app.use(cors());
 
 // certain origins allowed:
-// let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']
-// app.use(cors({
-//   origin: (origin, callback) => {
-//     if (!origin) return callback(null, true); // i don't understand this line
-//     if (allowedOrigins.indexOf(origin) === -1){ // specific origin not in allowedOrigins list
-//       let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-//       return callback(new Error(message), false);
-//     }
-//     return callback(null, true);
-//   }
-// }));
+let allowedOrigins = ['http://localhost:4020', 'https://watch-til-death.netlify.app']
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // i don't understand this line
+    if (allowedOrigins.indexOf(origin) === -1) { // specific origin not in allowedOrigins list
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 // authentication
 require('./auth')(app);
