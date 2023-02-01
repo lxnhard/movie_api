@@ -25,7 +25,7 @@ const cors = require('cors');
 // app.use(cors());
 
 // certain origins allowed:
-let allowedOrigins = ['http://localhost:4020', 'https://watch-til-death.netlify.app']
+let allowedOrigins = ['http://localhost:4200', 'https://watch-til-death.netlify.app']
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true); // i don't understand this line
