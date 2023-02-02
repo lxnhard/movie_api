@@ -237,7 +237,7 @@ app.put('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sessi
     },
       { new: true }) // updated document is returned
       .then((updatedUser) => {
-        res.status(201).send("Favorite movie successfully added to " + updatedUser.Username);
+        res.status(200).json("Favorite movie successfully added to " + updatedUser.Username);
       })
       .catch((err) => {
         console.error(err);
