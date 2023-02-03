@@ -24,7 +24,7 @@ const cors = require('cors');
 // all origins allowed:
 // app.use(cors());
 // certain origins allowed:
-let allowedOrigins = ['http://localhost:4200', 'http://localhost:4200/', 'https://watch-til-death.netlify.app', 'https://lxnhard.github.io/movie_app-angular-client']
+let allowedOrigins = ['http://localhost:4200', 'http://localhost:4200/', 'https://watch-til-death.netlify.app', 'https://lxnhard.github.io', 'https://lxnhard.github.io/']
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true); // i don't understand this line
