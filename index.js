@@ -1,11 +1,15 @@
 const express = require('express'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
-  uuid = require('uuid'),
   mongoose = require('mongoose'),
   Models = require('./models.js'),
-  { check, validationResult } = require('express-validator');
+  { check, validationResult } = require('express-validator'),
+  { S3Client, ListObjectsV2Command, PutObjectCommand } = require('@aws-sdk/client-s3'),
+  fs = require('fs'),
+  fileUpload = require('express-fileupload');
 
+require('dotenv').config()
+console.log(process.env)
 
 const app = express();
 
@@ -13,28 +17,30 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // local database
-//mongoose.connect('mongodb://localhost:27017/movieDB', {useNewUrlParser: true, useUnifiedTopology: true});
+// mongoose.connect('mongodb://localhost:27017/movieDB', { useNewUrlParser: true, useUnifiedTopology: true });
 // online database
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // MIDDLEWARE
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
 // CORS
 const cors = require('cors');
 // all origins allowed:
-// app.use(cors());
+app.use(cors());
 // certain origins allowed:
-let allowedOrigins = ['http://localhost:4200', 'http://localhost:4200/', 'https://watch-til-death.netlify.app', 'https://lxnhard.github.io', 'https://lxnhard.github.io/']
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // i don't understand this line
-    if (allowedOrigins.indexOf(origin) === -1) { // specific origin not in allowedOrigins list
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message), false);
-    }
-    return callback(null, true);
-  }
-}));
+// let allowedOrigins = ['http://localhost:4200', 'http://localhost:4200/', 'https://watch-til-death.netlify.app', 'https://lxnhard.github.io', 'https://lxnhard.github.io/']
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     if (!origin) return callback(null, true);
+//     if (allowedOrigins.indexOf(origin) === -1) { // specific origin not in allowedOrigins list
+//       let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+//       return callback(new Error(message), false);
+//     }
+//     return callback(null, true);
+//   }
+// }));
 
 // authentication
 require('./auth')(app);
@@ -291,6 +297,49 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   }
 });
 
+
+
+// s3 client
+const s3Client = new S3Client({
+  region: process.env.S3_REGION,
+  endpoint: 'http://localhost:4566',
+  forcePathStyle: true
+})
+
+// list images in bucket
+app.get('/images', (req, res) => {
+  const listObjectsParams = {
+    Bucket: process.env.BUCKET_NAME
+  }
+  s3Client.send(new ListObjectsV2Command(listObjectsParams))
+    .then((listObjectsResponse) => {
+      res.send(listObjectsResponse)
+    })
+})
+
+
+//upload images
+app.post('/images', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const file = req.files.image;
+  const fileName = req.files.image.name;
+  const UPLOAD_TEMP_PATH = "/temp";
+  const tempPath = `${UPLOAD_TEMP_PATH}/${fileName}`;
+  file.mv(tempPath, (err) => { res.status(500) });
+
+  const PutObjectCommandParams = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: fileName,
+    Body: file.data
+  };
+
+  try {
+    const data = s3Client.send(new PutObjectCommand(PutObjectCommandParams));
+    res.status(200).send(fileName + ' successfully uploaded.');
+  } catch (err) {
+    console.log("Error", err);
+  }
+
+});
 
 // error handler
 app.use((err, req, res, next) => {
