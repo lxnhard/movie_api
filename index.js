@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
@@ -8,8 +9,6 @@ const express = require('express'),
   fs = require('fs'),
   fileUpload = require('express-fileupload');
 
-require('dotenv').config()
-console.log(process.env)
 
 const app = express();
 
