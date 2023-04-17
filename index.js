@@ -339,6 +339,7 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
     })
     .catch((err) => {
       console.log("Error", err);
+      res.status(500).send('Error: ' + err.$metadata.httpStatusCode);
     });
 });
 
@@ -348,15 +349,20 @@ app.get('/images/:Image', passport.authenticate('jwt', { session: false }), (req
   const HeadObjectCommandParams = {
     Bucket: process.env.BUCKET_NAME,
     Key: fileName
-  }
+  };
 
   s3Client.send(new HeadObjectCommand(HeadObjectCommandParams))
     .then((response) => {
-      const imageUri = `https://${process.env.BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${fileName}`;
-      return res.status(200).send(imageUri);
+      if (response.$metadata.httpStatusCode == '200') {
+        const imageUri = `https://${process.env.BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${fileName}`;
+        return res.status(200).send(imageUri);
+      } else {
+        res.status(400).send(fileName + 'does not exist.');
+      }
     })
     .catch((err) => {
       console.log("Error", err);
+      res.status(500).send('Error: ' + err.$metadata.httpStatusCode);
     });
 });
 
