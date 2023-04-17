@@ -6,7 +6,7 @@ const express = require('express'),
   mongoose = require('mongoose'),
   Models = require('./models.js'),
   { check, validationResult } = require('express-validator'),
-  { S3Client, ListObjectsV2Command, PutObjectCommand } = require('@aws-sdk/client-s3'),
+  { S3Client, ListObjectsV2Command, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3'),
   fs = require('fs'),
   fileUpload = require('express-fileupload');
 
@@ -312,6 +312,10 @@ app.get('/images', (req, res) => {
     .then((listObjectsResponse) => {
       res.send(listObjectsResponse)
     })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 })
 
 
@@ -329,13 +333,31 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
     Body: file.data
   };
 
-  try {
-    const data = s3Client.send(new PutObjectCommand(PutObjectCommandParams));
-    res.status(200).send(fileName + ' successfully uploaded.');
-  } catch (err) {
-    console.log("Error", err);
+  s3Client.send(new PutObjectCommand(PutObjectCommandParams))
+    .then((response) => {
+      res.status(200).send(fileName + ' successfully uploaded.');
+    })
+    .catch((err) => {
+      console.log("Error", err);
+    });
+});
+
+//retrieve image url
+app.get('/images/:Image', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const fileName = req.params.Image;
+  const HeadObjectCommandParams = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: fileName
   }
 
+  s3Client.send(new HeadObjectCommand(HeadObjectCommandParams))
+    .then((response) => {
+      const imageUri = `https://${process.env.BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${fileName}`;
+      return res.status(200).send(imageUri);
+    })
+    .catch((err) => {
+      console.log("Error", err);
+    });
 });
 
 // error handler
