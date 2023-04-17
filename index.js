@@ -1,4 +1,5 @@
-require('dotenv').config()
+require('dotenv').config({ override: true });
+
 const express = require('express'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
@@ -8,7 +9,6 @@ const express = require('express'),
   { S3Client, ListObjectsV2Command, PutObjectCommand } = require('@aws-sdk/client-s3'),
   fs = require('fs'),
   fileUpload = require('express-fileupload');
-
 
 const app = express();
 
@@ -300,9 +300,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 
 // s3 client
 const s3Client = new S3Client({
-  region: process.env.S3_REGION,
-  endpoint: 'http://localhost:4566',
-  forcePathStyle: true
+  region: process.env.S3_REGION
 })
 
 // list images in bucket
