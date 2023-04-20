@@ -6,7 +6,8 @@ const express = require('express'),
   mongoose = require('mongoose'),
   Models = require('./models.js'),
   { check, validationResult } = require('express-validator'),
-  { S3Client, ListObjectsV2Command, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3'),
+  { getSignedUrl } = require("@aws-sdk/s3-request-presigner"),
+  { S3Client, ListObjectsV2Command, PutObjectCommand, HeadObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3'),
   fs = require('fs'),
   fileUpload = require('express-fileupload');
 
@@ -329,6 +330,7 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
 
   const PutObjectCommandParams = {
     Bucket: process.env.BUCKET_NAME,
+    // Key: `original-images/${fileName}`,
     Key: fileName,
     Body: file.data
   };
@@ -344,26 +346,37 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
 });
 
 //retrieve image url
-app.get('/images/:Image', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/images/:Image', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   const fileName = req.params.Image;
-  const HeadObjectCommandParams = {
+  const getObjectParams = {
     Bucket: process.env.BUCKET_NAME,
     Key: fileName
   };
 
-  s3Client.send(new HeadObjectCommand(HeadObjectCommandParams))
-    .then((response) => {
-      if (response.$metadata.httpStatusCode == '200') {
-        const imageUri = `https://${process.env.BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${fileName}`;
-        return res.status(200).send(imageUri);
-      } else {
-        res.status(400).send(fileName + 'does not exist.');
-      }
-    })
-    .catch((err) => {
-      console.log("Error", err);
-      res.status(500).send('Error: ' + err.$metadata.httpStatusCode);
-    });
+  const command = new GetObjectCommand(getObjectParams);
+
+  try {
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 900 });
+    res.json({ url })
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+
+
+  // s3Client.send(new HeadObjectCommand(HeadObjectCommandParams))
+  //   .then((response) => {
+  //     if (response.$metadata.httpStatusCode == '200') {
+  //       const imageUri = `https://${process.env.BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${fileName}`;
+  //       return res.status(200).send(imageUri);
+  //     } else {
+  //       res.status(400).send(fileName + 'does not exist.');
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log("Error", err);
+  //     res.status(500).send('Error: ' + err.$metadata.httpStatusCode);
+  //   });
 });
 
 // error handler
