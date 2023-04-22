@@ -327,9 +327,7 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
   // validation
   const array_of_allowed_files = ['png', 'jpeg', 'jpg', 'gif'];
   const array_of_allowed_file_types = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
-  const file_extension = file.originalname.slice(
-    ((file.originalname.lastIndexOf('.') - 1) >>> 0) + 2
-  );
+  const file_extension = file.name.split('.').slice(-1)[0].toLowerCase();
 
   if (!array_of_allowed_files.includes(file_extension) || !array_of_allowed_file_types.includes(file.mimetype)) {
     throw Error('Invalid file');
