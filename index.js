@@ -330,28 +330,28 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
   const file_extension = file.name.split('.').slice(-1)[0].toLowerCase();
 
   if (!array_of_allowed_files.includes(file_extension) || !array_of_allowed_file_types.includes(file.mimetype)) {
-    throw Error('Invalid file');
+    res.status(422).send("Invalid filetype.")
+  } else {
+    const fileName = req.files.image.name;
+    const UPLOAD_TEMP_PATH = "/temp";
+    const tempPath = `${UPLOAD_TEMP_PATH}/${fileName}`;
+    file.mv(tempPath, (err) => { res.status(500) });
+
+    const PutObjectCommandParams = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: `original-images/${fileName}`,
+      Body: file.data
+    };
+
+    s3Client.send(new PutObjectCommand(PutObjectCommandParams))
+      .then((response) => {
+        res.status(200).send(fileName + ' successfully uploaded.');
+      })
+      .catch((err) => {
+        console.log("Error", err);
+        res.status(500).send('Error: ' + err.$metadata.httpStatusCode);
+      });
   }
-
-  const fileName = req.files.image.name;
-  const UPLOAD_TEMP_PATH = "/temp";
-  const tempPath = `${UPLOAD_TEMP_PATH}/${fileName}`;
-  file.mv(tempPath, (err) => { res.status(500) });
-
-  const PutObjectCommandParams = {
-    Bucket: process.env.BUCKET_NAME,
-    Key: `original-images/${fileName}`,
-    Body: file.data
-  };
-
-  s3Client.send(new PutObjectCommand(PutObjectCommandParams))
-    .then((response) => {
-      res.status(200).send(fileName + ' successfully uploaded.');
-    })
-    .catch((err) => {
-      console.log("Error", err);
-      res.status(500).send('Error: ' + err.$metadata.httpStatusCode);
-    });
 });
 
 // retrieve image url
