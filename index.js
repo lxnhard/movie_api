@@ -7,8 +7,7 @@ const express = require('express'),
   Models = require('./models.js'),
   { check, validationResult } = require('express-validator'),
   { getSignedUrl } = require("@aws-sdk/s3-request-presigner"),
-  { S3Client, ListObjectsV2Command, PutObjectCommand, HeadObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3'),
-  fs = require('fs'),
+  { S3Client, ListObjectsV2Command, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3'),
   fileUpload = require('express-fileupload');
 
 const app = express();
@@ -304,10 +303,11 @@ const s3Client = new S3Client({
   region: process.env.S3_REGION
 })
 
-// list images in bucket
+// list images in bucket (original images)
 app.get('/images', (req, res) => {
   const listObjectsParams = {
-    Bucket: process.env.BUCKET_NAME
+    Bucket: process.env.BUCKET_NAME,
+    Prefix: "original-images"
   }
   s3Client.send(new ListObjectsV2Command(listObjectsParams))
     .then((listObjectsResponse) => {
@@ -320,7 +320,7 @@ app.get('/images', (req, res) => {
 })
 
 
-//upload images
+// upload (original) images
 app.post('/images', passport.authenticate('jwt', { session: false }), (req, res) => {
   const file = req.files.image;
   const fileName = req.files.image.name;
@@ -330,8 +330,7 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
 
   const PutObjectCommandParams = {
     Bucket: process.env.BUCKET_NAME,
-    // Key: `original-images/${fileName}`,
-    Key: fileName,
+    Key: `original-images/${fileName}`,
     Body: file.data
   };
 
@@ -345,12 +344,13 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
     });
 });
 
-//retrieve image url
-app.get('/images/:Image', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+// retrieve image url
+app.get('/images/:Version/:Image', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+  const version = req.params.Version;
   const fileName = req.params.Image;
   const getObjectParams = {
     Bucket: process.env.BUCKET_NAME,
-    Key: fileName
+    Key: `${version}/${fileName}`,
   };
 
   const command = new GetObjectCommand(getObjectParams);
