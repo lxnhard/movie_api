@@ -323,6 +323,18 @@ app.get('/images', (req, res) => {
 // upload (original) images
 app.post('/images', passport.authenticate('jwt', { session: false }), (req, res) => {
   const file = req.files.image;
+
+  // validation
+  const array_of_allowed_files = ['png', 'jpeg', 'jpg', 'gif'];
+  const array_of_allowed_file_types = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+  const file_extension = file.originalname.slice(
+    ((file.originalname.lastIndexOf('.') - 1) >>> 0) + 2
+  );
+
+  if (!array_of_allowed_files.includes(file_extension) || !array_of_allowed_file_types.includes(file.memetype)) {
+    throw Error('Invalid file');
+  }
+
   const fileName = req.files.image.name;
   const UPLOAD_TEMP_PATH = "/temp";
   const tempPath = `${UPLOAD_TEMP_PATH}/${fileName}`;
@@ -362,21 +374,6 @@ app.get('/images/:Version/:Image', passport.authenticate('jwt', { session: false
     console.error(err);
     next(err);
   }
-
-
-  // s3Client.send(new HeadObjectCommand(HeadObjectCommandParams))
-  //   .then((response) => {
-  //     if (response.$metadata.httpStatusCode == '200') {
-  //       const imageUri = `https://${process.env.BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${fileName}`;
-  //       return res.status(200).send(imageUri);
-  //     } else {
-  //       res.status(400).send(fileName + 'does not exist.');
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log("Error", err);
-  //     res.status(500).send('Error: ' + err.$metadata.httpStatusCode);
-  //   });
 });
 
 // error handler
