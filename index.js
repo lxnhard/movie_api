@@ -355,7 +355,7 @@ app.post('/images', passport.authenticate('jwt', { session: false }), (req, res)
 });
 
 // retrieve image url
-app.get('/images/:Version/:Image', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+app.get('/images/:Version/:Image', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const version = req.params.Version;
   const fileName = req.params.Image;
   const getObjectParams = {
@@ -367,10 +367,10 @@ app.get('/images/:Version/:Image', passport.authenticate('jwt', { session: false
 
   try {
     const url = await getSignedUrl(s3Client, command, { expiresIn: 900 });
-    res.json({ url })
+    res.status(200).json({ url })
   } catch (err) {
     console.error(err);
-    next(err);
+    res.status(404).send("image not available");
   }
 });
 
